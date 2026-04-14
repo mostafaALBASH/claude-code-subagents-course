@@ -14,9 +14,18 @@ app.get('/api/todos', (req, res) => {
 });
 
 app.post('/api/todos', (req, res) => {
+  const { title } = req.body;
+
+  if (!title || typeof title !== 'string' || title.trim() === '') {
+    return res.status(400).json({ error: 'title is required and must be a non-empty string' });
+  }
+  if (title.length > 200) {
+    return res.status(400).json({ error: 'title must be 200 characters or fewer' });
+  }
+
   const todo = {
     id: todos.length + 1,
-    title: req.body.title,
+    title: title.trim(),
     completed: false,
   };
   todos.push(todo);
